@@ -1,3 +1,4 @@
+
 export interface RegisterFormData {
   full_name: string;
   email: string;
@@ -15,7 +16,7 @@ export interface LoginFormData {
 export interface OtpFormData {
   userId: string;
   otp: string;
-  mobile_Number: string;
+  // mobile_Number: string;
 }
 
 export interface Props {
@@ -54,9 +55,5 @@ export interface AuthState {
   role: string | null;
 }
 
-export interface RestaurantApplyData {
-  restaurantName: string;
-  address: string;
-  phone: string;
-  description?: string;
-}
+
+

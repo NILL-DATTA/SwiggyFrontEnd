@@ -26,7 +26,6 @@ export default function Login({ onSuccess }: SuccessFunlogin) {
       const res = await dispatch(userSignin(data)).unwrap();
       console.log("Login Success:", res);
       onSuccess(data);
-      
     } catch (err: any) {
       console.log("Login Error:", err);
     }

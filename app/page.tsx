@@ -9,17 +9,18 @@ import Restaurant from "@/components/landingPageUser/restaurant/restaurant";
 import { useRef } from "react";
 
 /* ---------------- Main Page ---------------- */
+
 export default function SwiggyHome() {
-  const instaRef = useRef(null);
+  const instaRef = useRef<HTMLDivElement>(null);
   const restaurantRef = useRef(null);
 
-  const scroll = (ref, direction) => {
-    if (ref.current) {
-      ref.current.scrollBy({
-        left: direction === "left" ? -300 : 300,
-        behavior: "smooth",
-      });
-    }
+  const scroll = (
+    ref: React.RefObject<HTMLDivElement | null>,
+    direction: "left" | "right",
+  ) => {
+    if (!ref.current) return;
+
+    ref.current.scrollLeft += direction === "left" ? -300 : 300;
   };
 
   const foods = [

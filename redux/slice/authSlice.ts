@@ -5,10 +5,9 @@ import {
   LoginFormData,
   OtpFormData,
   RegisterFormData,
-  RestaurantApplyData,
 } from "@/typeScript/auth.type";
 
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import { AxiosError } from "axios";
 
@@ -90,29 +89,6 @@ export const userSignin = createAsyncThunk<
   }
 });
 
-//  APPLY RESTAURANT
-
-export const userApplyRestaurant = createAsyncThunk<
-  any,
-  RestaurantApplyData,
-  { rejectValue: string }
->("auth/applyRestaurant", async (data, { rejectWithValue }) => {
-  try {
-    const response = await AxiosInstance.post(
-      endPoints.auth.applyRestaurant,
-      data,
-    );
-
-    return response.data;
-  } catch (error) {
-    const err = error as AxiosError<{ message: string }>;
-
-    return rejectWithValue(
-      err.response?.data?.message || "Restaurant application failed",
-    );
-  }
-});
-
 // SLICE
 
 const authSlice = createSlice({
@@ -137,7 +113,7 @@ const authSlice = createSlice({
         if (payload.status == true) {
           state.user = payload.data;
 
-          setCookie("id", payload, {
+          setCookie("id", payload.data.id, {
             path: "/",
             sameSite: "lax",
           });
@@ -193,7 +169,6 @@ const authSlice = createSlice({
         state.user = payload.data;
         state.role = payload.data.role;
 
-
         // save cookies
 
         if (payload.status == true) {
@@ -226,31 +201,6 @@ const authSlice = createSlice({
 
         const message =
           action.payload || action.error.message || "Login failed";
-
-        state.error = message;
-
-        toast.error(message);
-      })
-
-      //APPLY RESTAURANT
-
-      .addCase(userApplyRestaurant.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-
-      .addCase(userApplyRestaurant.fulfilled, (state, action) => {
-        state.loading = false;
-
-        toast.success(
-          action.payload?.message || "Restaurant application submitted",
-        );
-      })
-
-      .addCase(userApplyRestaurant.rejected, (state, action) => {
-        state.loading = false;
-
-        const message = action.payload || "Restaurant application failed";
 
         state.error = message;
 

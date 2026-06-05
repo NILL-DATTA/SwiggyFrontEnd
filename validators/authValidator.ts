@@ -28,7 +28,7 @@ export const Registerschema = yup.object().shape({
     .string()
     .oneOf([yup.ref("password")], "Password do not match")
     .required("Please confirm your password"),
-    
+
   address: yup
     .string()
     .trim()
@@ -54,27 +54,7 @@ export const loginScehma = yup.object().shape({
     .required("Password is required"),
 });
 
-export const applyRestaurantScehma = yup.object().shape({
-  name: yup
-    .string()
-    .trim()
-    .min(2, "Name too short")
-    .required("Full name is required"),
 
-  phone: yup
-    .string()
-    .required("Mobile number is required")
-    .matches(/^[0-9]{10}$/, "Mobile number must be 10 digits"),
 
-  address: yup
-    .string()
-    .trim()
-    .min(5, "Please provide a complete address")
-    .required("Physical address is required"),
 
-  city: yup
-    .string()
-    .trim()
-    .min(2, "Please provide a complete address")
-    .required("Physical city is required"),
-});
+

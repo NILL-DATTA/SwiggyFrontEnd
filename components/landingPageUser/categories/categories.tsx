@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Categories({ foods }) {
+export default function Categories({ foods }: { foods: string[] }) {
   return (
     <>
       <div className="p-8">

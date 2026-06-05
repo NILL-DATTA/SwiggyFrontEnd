@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+"use client";
+
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { OtpSchema } from "@/validators/authValidator";
@@ -28,19 +29,15 @@ export default function Otpverify({ onSuccess, phone }: SuccessFunotp) {
 
   const onSubmit = async (data: OtpInputData) => {
     try {
-     
-
       const userId = String(getCookie("id"));
-
+     console.log(userId,"userId")
       const payload: OtpFormData = {
         ...data,
         userId,
-        mobile_Number: phone,
+        // mobile_Number: phone,
       };
 
       const res = await dispatch(verifyOtp(payload)).unwrap();
-
-   
 
       onSuccess(payload);
     } catch (err) {
@@ -49,7 +46,7 @@ export default function Otpverify({ onSuccess, phone }: SuccessFunotp) {
       } else {
         toast.error("Something went wrong");
       }
-    } 
+    }
   };
 
   return (

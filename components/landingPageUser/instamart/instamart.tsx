@@ -1,7 +1,17 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import React from "react";
 
-export default function Instamart({ instaMart, instaRef, scroll }) {
+type Props = {
+  instaMart: string[];
+
+  instaRef: React.RefObject<HTMLDivElement | null>;
+
+  scroll: (
+    ref: React.RefObject<HTMLDivElement | null>,
+    direction: "left" | "right"
+  ) => void;
+};
+export default function Instamart({ instaMart, instaRef, scroll }: Props) {
   return (
     <div className="p-8 bg-gray-200">
       <div className="flex justify-between items-center mb-6">
@@ -16,6 +26,7 @@ export default function Instamart({ instaMart, instaRef, scroll }) {
           >
             <ChevronLeft />
           </button>
+          
           <button
             onClick={() => scroll(instaRef, "right")}
             className="p-2 bg-white shadow rounded-full"

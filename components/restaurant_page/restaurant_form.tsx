@@ -1,17 +1,14 @@
-import { userApplyRestaurant } from "@/redux/slice/authSlice";
-import { AppDispatch } from "@/redux/store/store";
-import { applyRestaurantScehma } from "@/validators/authValidator";
+import { userApplyRestaurant } from "@/redux/slice/restaurantSlice";
+import { AppDispatch, RootState } from "@/redux/store/store";
+import { applyRestaurantScehma } from "@/validators/restaurantValidator";
+
 import { yupResolver } from "@hookform/resolvers/yup";
-import axios from "axios";
-import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
-import { toast } from "sonner";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Restaurant_form() {
-  const [loading, setLoading] = useState(false);
-
   const dispatch = useDispatch<AppDispatch>();
+  const { loading } = useSelector((state: RootState) => state.auth);
   const {
     register,
     handleSubmit,
@@ -23,44 +20,12 @@ export default function Restaurant_form() {
   const onSubmit = async (data, e) => {
     e.preventDefault();
     try {
-      setLoading(true);
-
       const res = await dispatch(userApplyRestaurant(data)).unwrap();
-
-      console.log(res, "resRegister");
-
-      const payload = res?.data?.id;
-
-      if (payload) {
-      }
-
-      toast.success(res?.message || "Register successful");
-
-      console.log("Signup success:", res);
+      console.log(res, "res");
     } catch (err: any) {
       console.log("Login Error:", err);
 
       // axios error
-      if (axios.isAxiosError(err)) {
-        toast.error(err.response?.data?.message || "Server error occurred");
-      }
-
-      // redux thunk rejectWithValue error
-      else if (err?.message) {
-        toast.error(err.message);
-      }
-
-      // string error
-      else if (typeof err === "string") {
-        toast.error(err);
-      }
-
-      // fallback
-      else {
-        toast.error("Something went wrong");
-      }
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -79,20 +44,6 @@ export default function Restaurant_form() {
         <div className="mt-7 space-y-4">
           <div>
             <label className="mb-2 block text-sm font-medium text-gray-700">
-              Full Name
-            </label>
-
-            <input
-              {...register("name")}
-              type="text"
-              placeholder="Enter your name"
-              className="h-13 w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 text-sm outline-none transition focus:border-orange-500 focus:bg-white"
-            />
-            <p className="text-red-500 text-sm mt-1">{errors.name?.message}</p>
-          </div>
-
-          <div>
-            <label className="mb-2 block text-sm font-medium text-gray-700">
               Mobile Number / Restaurant ID
             </label>
 
@@ -103,36 +54,6 @@ export default function Restaurant_form() {
               className="h-13 w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 text-sm outline-none transition focus:border-orange-500 focus:bg-white"
             />
             <p className="text-red-500 text-sm mt-1">{errors.phone?.message}</p>
-          </div>
-
-          <div>
-            <label className="mb-2 block text-sm font-medium text-gray-700">
-              Restaurant Address
-            </label>
-
-            <input
-              {...register("address")}
-              type="text"
-              placeholder="Enter address"
-              className="h-13 w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 text-sm outline-none transition focus:border-orange-500 focus:bg-white"
-            />
-            <p className="text-red-500 text-sm mt-1">
-              {errors.address?.message}
-            </p>
-          </div>
-
-          <div>
-            <label className="mb-2 block text-sm font-medium text-gray-700">
-              City
-            </label>
-
-            <input
-              {...register("city")}
-              type="text"
-              placeholder="Enter city"
-              className="h-13 w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 text-sm outline-none transition focus:border-orange-500 focus:bg-white"
-            />
-            <p className="text-red-500 text-sm mt-1">{errors.city?.message}</p>
           </div>
 
           <button className="mt-2 h-13 w-full rounded-2xl bg-orange-500 text-base font-semibold text-white transition hover:bg-orange-600">

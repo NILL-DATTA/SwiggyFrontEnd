@@ -4,16 +4,30 @@ import Login from "@/app/auth/signin/page";
 import RegisterPage from "@/app/auth/signup/page";
 import { RootState } from "@/redux/store/store";
 import { OtpFormData, RegisterFormData } from "@/typeScript/auth.type";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
+// SSR HTML
+// VS
+// Client Initial HTML
+
+//compare if its not same Hydration failed
 export default function Navbar() {
+  const [mounted, setMounted] = useState(false);
+
   const [open, setOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
   const [showOtp, setShowOtp] = useState(false);
   const [phone, setPhone] = useState("");
   const { token, role, user } = useSelector((state: RootState) => state.auth);
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  console.log(token, "token");
   return (
     <>
       {/* Navbar */}
@@ -26,32 +40,34 @@ export default function Navbar() {
 
           <button className="border px-4 py-2 rounded-lg">Get the App</button>
 
-          {token ? (
-            <div className="flex items-center gap-3 bg-white/10 px-4 py-2 rounded-xl border border-white/10 backdrop-blur-md">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-orange-500 to-red-500 flex items-center justify-center text-white font-semibold uppercase">
-                {user?.name?.charAt(0)}
-              </div>
+          <div>
+            {token ? (
+              <div className="flex items-center gap-3 bg-white/10 px-4 py-2 rounded-xl border border-white/10 backdrop-blur-md">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-orange-500 to-red-500 flex items-center justify-center text-white font-semibold uppercase">
+                  {user?.name?.charAt(0)}
+                </div>
 
-              <div className="flex flex-col">
-                <span className="text-xs text-white-400">Welcome back</span>
+                <div className="flex flex-col">
+                  <span className="text-xs text-white-400">Welcome back</span>
 
-                <h1 className="text-sm font-semibold text-white capitalize">
-                  {user?.name}
-                </h1>
+                  <h1 className="text-sm font-semibold text-white capitalize">
+                    {user?.name}
+                  </h1>
+                </div>
               </div>
-            </div>
-          ) : (
-            <button
-              onClick={() => {
-                setOpen(true);
-                setIsLogin(true);
-                setShowOtp(false);
-              }}
-              className="bg-gradient-to-r from-orange-500 to-red-500 hover:scale-105 transition-all duration-300 px-5 py-2.5 rounded-xl text-white font-medium shadow-lg hover:shadow-orange-500/30"
-            >
-              Sign In
-            </button>
-          )}
+            ) : (
+              <button
+                onClick={() => {
+                  setOpen(true);
+                  setIsLogin(true);
+                  setShowOtp(false);
+                }}
+                className="bg-gradient-to-r from-orange-500 to-red-500 hover:scale-105 transition-all duration-300 px-5 py-2.5 rounded-xl text-white font-medium shadow-lg hover:shadow-orange-500/30"
+              >
+                Sign In
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
