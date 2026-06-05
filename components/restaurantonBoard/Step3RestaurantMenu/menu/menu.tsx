@@ -45,7 +45,7 @@ export default function MenuSetupForm() {
   return (
     <div style={{ display: "flex", minHeight: "100vh", background: "#f4f4f4", fontFamily: "sans-serif" }}>
 
-      {/* ── Left Sidebar Stepper ── */}
+
 
 
       {/* ── Main Content ── */}
