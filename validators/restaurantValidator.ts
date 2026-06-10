@@ -71,7 +71,7 @@ export const menuSchema = yup.object({
 
   category: yup.string().required("Category is required"),
 
-  image: yup.string().required("Image is required"),
+  image: yup.mixed().nullable(),
 
   basePrice: yup
     .number()
@@ -93,11 +93,8 @@ export const menuSchema = yup.object({
     .array()
     .of(
       yup.object({
-        name: yup.string().required("Variant name is required"),
-        price: yup
-          .number()
-          .typeError("Variant price must be a number")
-          .required("Variant price is required"),
+        name: yup.string().required(),
+        price: yup.number().required(),
       })
     )
     .min(1, "At least one variant is required"),
@@ -109,7 +106,7 @@ export const menuSchema = yup.object({
     })
   ),
 
-  tags: yup.array().of(yup.string().required()),
+  tags: yup.array().of(yup.string()),
 
   isAvailable: yup.boolean().required(),
 
@@ -120,14 +117,7 @@ export const menuSchema = yup.object({
   eligibleForOffers: yup.boolean().required(),
 
   preparationTime: yup.object({
-    min: yup
-      .number()
-      .typeError("Min preparation time is required")
-      .required(),
-
-    max: yup
-      .number()
-      .typeError("Max preparation time is required")
-      .required(),
+    min: yup.number().required(),
+    max: yup.number().required(),
   }),
 });

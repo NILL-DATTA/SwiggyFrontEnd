@@ -1,6 +1,19 @@
 import React from "react";
 
-export default function Addons({ watch, setValue }) {
+interface Addon {
+  name: string;
+  price: number;
+}
+
+interface AddonsProps {
+  watch: any;
+  setValue: any;
+}
+
+export default function Addons({
+  watch,
+  setValue,
+}: AddonsProps) {
   const ADDONS = [
     { label: "Extra cheese", price: 30 },
     { label: "Extra gravy", price: 20 },
@@ -44,60 +57,104 @@ export default function Addons({ watch, setValue }) {
         >
           <span>{icon}</span> {title}
         </p>
+
         {children}
       </div>
     );
   }
 
-  const selectedAddons = watch("addons") ?? [];
+  const selectedAddons: Addon[] = (watch("addons") || []).filter(
+    (item: any) =>
+      typeof item === "object" &&
+      item !== null &&
+      item.name
+  );
+  const toggleAddon = (addon: {
+    label: string;
+    price: number;
+  }) => {
+    const exists = selectedAddons.some(
+      (item) => item.name === addon.label
+    );
 
-  const toggleAddon = (addon: string) => {
-    const next = selectedAddons.includes(addon)
-      ? selectedAddons.filter((a) => a !== addon)
-      : [...selectedAddons, addon];
-    setValue("addons", next);
+    const updatedAddons = exists
+      ? selectedAddons.filter(
+        (item) => item.name !== addon.label
+      )
+      : [
+        ...selectedAddons,
+        {
+          name: addon.label,
+          price: addon.price,
+        },
+      ];
+
+    setValue("addons", updatedAddons, {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
   };
 
   return (
-    <>
-      <Card title="CUSTOMISATIONS & ADD-ONS" icon="🛠">
-        <p style={{ fontSize: 12, color: "#9ca3af", marginBottom: 10 }}>
-          Common add-ons
-        </p>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: 8,
-          }}
-        >
-          {ADDONS.map((addon) => (
-            <label
-              key={addon.label}
+    <Card title="CUSTOMISATIONS & ADD-ONS" icon="🛠">
+      <p
+        style={{
+          fontSize: 12,
+          color: "#9ca3af",
+          marginBottom: 10,
+        }}
+      >
+        Common add-ons
+      </p>
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: 8,
+        }}
+      >
+        {ADDONS.map((addon) => (
+          <label
+            key={addon.label}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              border: "1px solid #e5e7eb",
+              borderRadius: 8,
+              padding: "9px 12px",
+              cursor: "pointer",
+            }}
+          >
+            <input
+              type="checkbox"
+              checked={selectedAddons.some(
+                (item) => item.name === addon.label
+              )}
+              onChange={() => toggleAddon(addon)}
               style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                border: "1px solid #e5e7eb",
-                borderRadius: 8,
-                padding: "9px 12px",
-                cursor: "pointer",
+                accentColor: "#FC8019",
+                width: 14,
+                height: 14,
+              }}
+            />
+
+            <span
+              style={{
+                fontSize: 13,
+                color: "#374151",
               }}
             >
-              <input
-                type="checkbox"
-                checked={selectedAddons.includes(addon.label)}
-                onChange={() => toggleAddon(addon.label)}
-                style={{ accentColor: "#FC8019", width: 14, height: 14 }}
-              />
-              <span style={{ fontSize: 13, color: "#374151" }}>
-                {addon.label}{" "}
-                <span style={{ color: "#9ca3af" }}>(₹{addon.price})</span>
+              {addon.label}
+              <span style={{ color: "#9ca3af" }}>
+                {" "}
+                (₹{addon.price})
               </span>
-            </label>
-          ))}
-        </div>
-      </Card>
-    </>
+            </span>
+          </label>
+        ))}
+      </div>
+    </Card>
   );
 }

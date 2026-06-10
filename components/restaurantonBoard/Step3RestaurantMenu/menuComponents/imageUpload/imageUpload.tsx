@@ -14,6 +14,7 @@ export default function ImageUpload({ setValue, watch, errors }: any) {
     });
   };
 
+ 
   return (
     <div style={{
       background: "#fff",

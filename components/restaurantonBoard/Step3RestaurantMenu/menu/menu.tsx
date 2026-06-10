@@ -34,60 +34,81 @@ export default function MenuSetupForm() {
       description: "",
       foodType: "veg",
       category: "Starters",
-      image: null as any,
+      image: null,
       basePrice: 0,
       discountPrice: 0,
       gst: 5,
-      variants: [{ name: "Full", price: 299 }],
+
+      variants: [
+        {
+          name: "Full",
+          price: 299,
+        },
+      ],
+
       addons: [],
+
       tags: [],
+
       isAvailable: true,
       enablePreOrder: false,
       allowSpecialInstructions: true,
       eligibleForOffers: true,
-      preparationTime: { min: 20, max: 30 },
-    },
+
+      preparationTime: {
+        min: 20,
+        max: 30,
+      },
+    }
   });
 
-const onSubmit = async (data: any) => {
-  try {
-    const formData = new FormData();
+  const onSubmit = async (data: any) => {
+    console.log("ADDONS DATA:", data.addons);
 
-    formData.append("itemName", data.itemName);
-    formData.append("description", data.description);
-    formData.append("foodType", data.foodType);
-    formData.append("category", data.category);
+    try {
+      const formData = new FormData();
 
-    formData.append("basePrice", String(data.basePrice));
-    formData.append("discountPrice", String(data.discountPrice));
-    formData.append("gst", String(data.gst));
+      formData.append("itemName", data.itemName);
+      formData.append("description", data.description);
+      formData.append("foodType", data.foodType);
+      formData.append("category", data.category);
 
-    formData.append("isAvailable", String(data.isAvailable));
-    formData.append("enablePreOrder", String(data.enablePreOrder));
-    formData.append("allowSpecialInstructions", String(data.allowSpecialInstructions));
-    formData.append("eligibleForOffers", String(data.eligibleForOffers));
+      formData.append("basePrice", String(data.basePrice));
+      formData.append("discountPrice", String(data.discountPrice));
+      formData.append("gst", String(data.gst));
 
-    formData.append("variants", JSON.stringify(data.variants));
-    formData.append("addons", JSON.stringify(data.addons));
-    formData.append("tags", JSON.stringify(data.tags));
-    formData.append("preparationTime", JSON.stringify(data.preparationTime));
+      formData.append("isAvailable", String(data.isAvailable));
+      formData.append("enablePreOrder", String(data.enablePreOrder));
+      formData.append("allowSpecialInstructions", String(data.allowSpecialInstructions));
+      formData.append("eligibleForOffers", String(data.eligibleForOffers));
 
-    // 🔥 IMPORTANT FIX
-    if (data.image instanceof File) {
-      formData.append("image", data.image);
+      formData.append("variants", JSON.stringify(data.variants));
+      formData.append("addons", JSON.stringify(data.addons));
+      formData.append("tags", JSON.stringify(data.tags));
+      formData.append("preparationTime", JSON.stringify(data.preparationTime));
+
+      if (data.image instanceof File) {
+        formData.append("image", data.image);
+      }
+
+      const result = await dispatch(restaurantMenu(formData)).unwrap();
+      console.log("SUCCESS:", result);
+
+    } catch (err) {
+      console.error("FAILED:", err);
     }
-
-    const result = await dispatch(restaurantMenu(formData)).unwrap();
-    console.log("SUCCESS:", result);
-
-  } catch (err) {
-    console.error("FAILED:", err);
-  }
-};
+  };
 
   return (
     <div style={{ padding: 32 }}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(
+        onSubmit,
+        (errors) => {
+          console.log("FULL ERRORS:", errors);
+          console.log("CURRENT ADDONS:", watch("addons"));
+        }
+      )}
+      >
         <BasicDetailsMenu
           register={register}
           watch={watch}
