@@ -5,9 +5,7 @@ export const BaseURL = "http://localhost:4000";
 
 export const AxiosInstance = axios.create({
   baseURL: BaseURL,
-  headers: {
-    "Content-Type": "application/json",
-  },
+ 
   withCredentials: true,
 });
 

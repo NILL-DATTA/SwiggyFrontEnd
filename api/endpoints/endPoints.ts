@@ -1,4 +1,3 @@
-import { verify } from "crypto";
 
 export const endPoints = {
   auth: {
@@ -12,6 +11,7 @@ export const endPoints = {
     verifyOtp: "/restaurant/otp",
     restaurantDetails: "/restaurant/details",
     restaurantDoc: "/restaurant/documents",
+    restaurantMenu: "/restaurants/menu",
   },
 };
 

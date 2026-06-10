@@ -56,3 +56,78 @@ export const restaurantDoc = yup.object({
 
   fssaiNumber: yup.string().required(),
 });
+
+
+
+export const menuSchema = yup.object({
+  itemName: yup.string().required("Item name is required"),
+
+  description: yup.string().required("Description is required"),
+
+  foodType: yup
+    .string()
+    .oneOf(["veg", "non-veg"])
+    .required("Food type is required"),
+
+  category: yup.string().required("Category is required"),
+
+  image: yup.string().required("Image is required"),
+
+  basePrice: yup
+    .number()
+    .typeError("Base price must be a number")
+    .required("Base price is required")
+    .positive(),
+
+  discountPrice: yup
+    .number()
+    .typeError("Discount price must be a number")
+    .nullable(),
+
+  gst: yup
+    .number()
+    .typeError("GST must be a number")
+    .required("GST is required"),
+
+  variants: yup
+    .array()
+    .of(
+      yup.object({
+        name: yup.string().required("Variant name is required"),
+        price: yup
+          .number()
+          .typeError("Variant price must be a number")
+          .required("Variant price is required"),
+      })
+    )
+    .min(1, "At least one variant is required"),
+
+  addons: yup.array().of(
+    yup.object({
+      name: yup.string().required(),
+      price: yup.number().required(),
+    })
+  ),
+
+  tags: yup.array().of(yup.string().required()),
+
+  isAvailable: yup.boolean().required(),
+
+  enablePreOrder: yup.boolean().required(),
+
+  allowSpecialInstructions: yup.boolean().required(),
+
+  eligibleForOffers: yup.boolean().required(),
+
+  preparationTime: yup.object({
+    min: yup
+      .number()
+      .typeError("Min preparation time is required")
+      .required(),
+
+    max: yup
+      .number()
+      .typeError("Max preparation time is required")
+      .required(),
+  }),
+});

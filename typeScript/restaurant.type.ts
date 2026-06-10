@@ -1,4 +1,4 @@
-import { restaurantSchema } from "@/validators/restaurantValidator";
+import { menuSchema, restaurantSchema } from "@/validators/restaurantValidator";
 import {
   Control,
   FieldErrors,
@@ -56,5 +56,39 @@ export interface workingDaysProp {
 export interface RestaurantState {
   loading: boolean;
   error: string | null;
-  phone:string
+  phone: string;
 }
+
+export interface MenuItemPayload {
+  itemName: string;
+  description: string;
+  foodType: "veg" | "non-veg";
+  category: string;
+  image: string;
+  basePrice: number;
+  discountPrice: number;
+  gst: number;
+
+  variants: {
+    name: string;
+    price: number;
+  }[];
+
+  addons: {
+    name: string;
+    price: number;
+  }[];
+
+  tags: string[];
+
+  isAvailable: boolean;
+  enablePreOrder: boolean;
+  allowSpecialInstructions: boolean;
+  eligibleForOffers: boolean;
+
+  preparationTime: {
+    min: number;
+    max: number;
+  };
+}
+export type MenuFormData = yup.InferType<typeof menuSchema>;

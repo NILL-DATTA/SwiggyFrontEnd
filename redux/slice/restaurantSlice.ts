@@ -1,6 +1,7 @@
 import AxiosInstance from "@/api/axios/axios";
 import { endPoints } from "@/api/endpoints/endPoints";
 import {
+  MenuItemPayload,
   RestaurantApplyData,
   RestaurantDetails,
   restaurantOtp,
@@ -93,6 +94,27 @@ export const restaurantDocuments = createAsyncThunk<
   try {
     const response = await AxiosInstance.post(
       endPoints.restaurant.restaurantDoc,
+      data,
+    );
+
+    return response.data;
+  } catch (error) {
+    const err = error as AxiosError<{ message: string }>;
+
+    return rejectWithValue(
+      err.response?.data?.message || "Restaurant doc failed",
+    );
+  }
+});
+
+export const restaurantMenu = createAsyncThunk<
+  any,
+  MenuItemPayload,
+  { rejectValue: string }
+>("restaurant/restaurantMenu", async (data, { rejectWithValue }) => {
+  try {
+    const response = await AxiosInstance.post(
+      endPoints.restaurant.restaurantMenu,
       data,
     );
 
@@ -215,6 +237,22 @@ const restaurantSlice = createSlice({
         // state.error = message;
 
         // toast.error(message);
+      })
+
+      .addCase(restaurantMenu.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+
+      .addCase(restaurantMenu.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload;
+        state.error = null;
+      })
+
+      .addCase(restaurantMenu.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Something went wrong";
       });
   },
 });

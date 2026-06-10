@@ -11,6 +11,7 @@
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
     "@reduxjs/toolkit": "^2.11.2",
+    "@upstash/redis": "^1.38.0",
     "axios": "^1.16.0",
     "cookies-next": "^6.1.1",
     "lucide-react": "^1.14.0",
