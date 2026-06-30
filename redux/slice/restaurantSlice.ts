@@ -128,6 +128,32 @@ export const restaurantMenu = createAsyncThunk<
   }
 });
 
+
+
+export const restaurantContract = createAsyncThunk<
+  any,
+
+  { rejectValue: string }
+>("restaurant/restaurantContract", async (data, { rejectWithValue }) => {
+  try {
+    const response = await AxiosInstance.post(
+      endPoints.restaurant.restaurantContract,
+      data,
+    );
+
+    return response.data;
+  } catch (error) {
+    const err = error as AxiosError<{ message: string }>;
+
+    return rejectWithValue(
+      err.response?.data?.message || "Restaurant contract failed",
+    );
+  }
+});
+
+
+
+
 const restaurantSlice = createSlice({
   name: "restaurant",
   initialState,
@@ -244,15 +270,47 @@ const restaurantSlice = createSlice({
         state.error = null;
       })
 
-      .addCase(restaurantMenu.fulfilled, (state, action) => {
+      .addCase(restaurantMenu.fulfilled, (state, { payload }) => {
         state.loading = false;
-        state.data = action.payload;
+        if (payload.status == true) {
+          toast.success(payload.message)
+        }
         state.error = null;
       })
 
-      .addCase(restaurantMenu.rejected, (state, action) => {
+      .addCase(restaurantMenu.rejected, (state, { payload }) => {
         state.loading = false;
-        state.error = action.payload || "Something went wrong";
+
+
+        const message = payload || "Menu add failed"
+
+        state.error = message;
+
+        toast.error(message);
+      })
+
+      .addCase(restaurantContract.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+
+      .addCase(restaurantContract.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        if (payload.status == true) {
+          toast.success(payload.message)
+        }
+        state.error = null;
+      })
+
+      .addCase(restaurantContract.rejected, (state, { payload }) => {
+        state.loading = false;
+
+
+        const message = payload || "Contract add failed"
+
+        state.error = message;
+
+        toast.error(message);
       });
   },
 });

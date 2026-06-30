@@ -12,6 +12,7 @@ export const endPoints = {
     restaurantDetails: "/restaurant/details",
     restaurantDoc: "/restaurant/documents",
     restaurantMenu: "/restaurants/menu",
+    restaurantContract: "/partner-contract",
   },
 };
 
@@ -23,4 +24,6 @@ const endPointsUrl = [
   endPoints.restaurant.verifyOtp,
   endPoints.restaurant.restaurantDetails,
   endPoints.restaurant.restaurantDoc,
+  endPoints.restaurant.restaurantMenu,
+  endPoints.restaurant.restaurantContract,
 ];

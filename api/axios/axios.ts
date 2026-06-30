@@ -5,7 +5,7 @@ export const BaseURL = "http://localhost:4000";
 
 export const AxiosInstance = axios.create({
   baseURL: BaseURL,
- 
+
   withCredentials: true,
 });
 
@@ -39,7 +39,7 @@ AxiosInstance.interceptors.response.use(
 
       const refreshToken = getCookie("refresh-token");
 
-      
+
       try {
         const response = await axios.post(`${BaseURL}/refresh-token`, {
           refreshToken,

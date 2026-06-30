@@ -121,3 +121,17 @@ export const menuSchema = yup.object({
     max: yup.number().required(),
   }),
 });
+
+export const contractSchema = yup.object({
+  fullName: yup
+    .string()
+    .required("Authorized signatory name is required"),
+
+  designation: yup
+    .string()
+    .required("Designation is required"),
+
+  agreed: yup
+    .boolean()
+    .oneOf([true], "You must accept all terms to proceed"),
+});
