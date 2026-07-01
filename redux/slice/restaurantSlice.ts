@@ -21,6 +21,8 @@ const initialState: RestaurantState = {
   loading: false,
   error: null,
   phone,
+  menuData: []
+
 };
 
 export const userApplyRestaurant = createAsyncThunk<
@@ -151,6 +153,22 @@ export const restaurantContract = createAsyncThunk<
   }
 });
 
+
+export const addMenu = createAsyncThunk(
+  "restaurant/addMenu",
+  async (menuData, thunkAPI) => {
+    try {
+      const response = await AxiosInstance.post(
+        endPoints.restaurant.addmenu,
+        menuData
+      );
+
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
 
 
 
@@ -311,6 +329,18 @@ const restaurantSlice = createSlice({
         state.error = message;
 
         toast.error(message);
+      })
+
+      .addCase(addMenu.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(addMenu.fulfilled, (state, action) => {
+        state.loading = false;
+        state.menuData = action.payload;
+      })
+      .addCase(addMenu.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });

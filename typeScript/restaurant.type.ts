@@ -57,6 +57,7 @@ export interface RestaurantState {
   loading: boolean;
   error: string | null;
   phone: string;
+  menuData:[]
 }
 
 export interface MenuItemPayload {

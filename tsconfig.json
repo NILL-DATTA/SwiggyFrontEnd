@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-, "components/restaurantonBoard/Step2RestaurantDoc/restaurantDoc"  ],
+, "components/restaurantonBoard/Step2RestaurantDoc/restaurantDoc", "components/addDish_form/adddishchild"  ],
   "exclude": ["node_modules"]
 }
