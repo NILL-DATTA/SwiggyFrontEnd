@@ -40,7 +40,10 @@ export default function AddDish({
 
       <form
         id="add-food-form"
-        onSubmit={handleSubmit}
+        onSubmit={(e) => {
+          console.log("Form Submitted");
+          handleSubmit(e);
+        }}
         className="lg:col-span-2 space-y-6"
       >
 
@@ -48,18 +51,6 @@ export default function AddDish({
           <CardLabel>Dish Details</CardLabel>
 
           <div className="space-y-4">
-
-            <div>
-              <input
-                placeholder="Restaurant ID"
-                className={inputClass(!!errors?.restaurantId)}
-                {...register("restaurantId")}
-              />
-              <p className="text-xs text-red-500">
-                {errors?.restaurantId?.message}
-              </p>
-            </div>
-
             <div>
               <input
                 placeholder="Item Name"
@@ -77,7 +68,60 @@ export default function AddDish({
               {...register("description")}
             />
           </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
+            <div>
+              <label className="mb-2 block text-sm font-medium">
+                Food Type
+              </label>
+
+              <select
+                {...register("foodType")}
+                className={inputClass(false)}
+              >
+                <option value="Starter">Starter</option>
+                <option value="Main Course">Main Course</option>
+                <option value="Dessert">Dessert</option>
+                <option value="Beverage">Beverage</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="mb-2 block text-sm font-medium">
+                Category
+              </label>
+
+              <select
+                {...register("category")}
+                className={inputClass(false)}
+              >
+                <option value="Biryani">Biryani</option>
+                <option value="Pizza">Pizza</option>
+                <option value="Burger">Burger</option>
+                <option value="Chinese">Chinese</option>
+                <option value="Rolls">Rolls</option>
+                <option value="Drinks">Drinks</option>
+                <option value="panner">panner</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="mb-2 block text-sm font-medium">
+                Cuisine
+              </label>
+
+              <select
+                {...register("cuisine")}
+                className={inputClass(false)}
+              >
+                <option value="Indian">Indian</option>
+                <option value="Chinese">Chinese</option>
+                <option value="Italian">Italian</option>
+                <option value="Mexican">Mexican</option>
+              </select>
+            </div>
+
+          </div>
           <div className="space-y-4">
             <div>
               <label className="mb-2 block text-sm font-medium">

@@ -1,7 +1,6 @@
 import * as yup from "yup";
 
 export const foodSchema = yup.object({
-  restaurantId: yup.string().required("Restaurant ID is required"),
   itemName: yup.string().required("Item name is required"),
   description: yup.string().optional(),
 

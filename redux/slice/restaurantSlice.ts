@@ -21,7 +21,10 @@ const initialState: RestaurantState = {
   loading: false,
   error: null,
   phone,
-  menuData: []
+  menuData: [],
+  restaurantdashBoard: [],
+  hasRestaurant: [],
+
 
 };
 
@@ -131,7 +134,6 @@ export const restaurantMenu = createAsyncThunk<
 });
 
 
-
 export const restaurantContract = createAsyncThunk<
   any,
 
@@ -170,8 +172,37 @@ export const addMenu = createAsyncThunk(
   }
 );
 
+export const foodList = createAsyncThunk(
+  "restaurant/foodlist",
+  async (restaurantId, thunkAPI) => {
+    try {
+      const response = await AxiosInstance.get(
+        endPoints.restaurant.foodlist,
+      );
 
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
 
+export const restaurantDashboard = createAsyncThunk(
+  "restaurant/restaurantList",
+  async (_, thunkAPI) => {
+    try {
+      const response = await AxiosInstance.get(
+        endPoints.restaurant.restaurantlist
+      );
+
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data || error.message
+      );
+    }
+  }
+);
 const restaurantSlice = createSlice({
   name: "restaurant",
   initialState,
@@ -193,10 +224,11 @@ const restaurantSlice = createSlice({
         if (payload.status === true) {
           state.phone = payload.data.phone;
 
-          setCookie("phone", payload.data.phone, {
+          setCookie("email", payload.data.email, {
             path: "/",
             sameSite: "lax",
-          });
+          })
+
         }
 
         toast.success(payload?.message);
@@ -220,12 +252,14 @@ const restaurantSlice = createSlice({
       .addCase(verifyRestaurantOtp.fulfilled, (state, { payload }) => {
         state.loading = false;
 
-        if (payload.status == true) {
-          toast.success(payload?.message || "OTP verified successfully");
-          //  setCookie("phone", payload.data.phone, {
-          //   path: "/",
-          //   sameSite: "lax",
-          // });
+        if (payload.status === true) {
+
+          toast.success(
+            payload?.message || "OTP verified successfully"
+          );
+
+
+
         }
       })
 
@@ -248,6 +282,10 @@ const restaurantSlice = createSlice({
         state.loading = false;
 
         if (payload.status == true) {
+          setCookie("restaurant_id", payload.data._id, {
+            path: "/",
+            sameSite: "lax",
+          });
         }
       })
 
@@ -336,12 +374,41 @@ const restaurantSlice = createSlice({
       })
       .addCase(addMenu.fulfilled, (state, action) => {
         state.loading = false;
-        state.menuData = action.payload;
+
       })
       .addCase(addMenu.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      });
+      })
+
+
+      .addCase(foodList.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(foodList.fulfilled, (state, action) => {
+        state.loading = false;
+        state.menuData = action.payload;
+      })
+      .addCase(foodList.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      .addCase(restaurantDashboard.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(restaurantDashboard.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.hasRestaurant = payload.hasRestaurant;
+        state.restaurantdashBoard = payload.data;
+      })
+      .addCase(restaurantDashboard.rejected, (state, { payload }) => {
+        state.loading = false;
+        state.error = payload;
+        state.hasRestaurant = null;
+        state.restaurantdashBoard = null;
+      })
   },
 });
 

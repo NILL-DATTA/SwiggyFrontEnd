@@ -1,10 +1,17 @@
 import * as yup from "yup";
 
+
 export const applyRestaurantScehma = yup.object().shape({
-  phone: yup
+  email: yup
     .string()
-    .required("Mobile number is required")
-    .matches(/^[0-9]{10}$/, "Mobile number must be 10 digits"),
+    .trim()
+    .lowercase()
+    .email("Please enter a valid email address")
+    .matches(
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+      "Please enter a valid email address"
+    )
+    .required("Email is required"),
 });
 
 export const RestaurantOtpSchema = yup.object().shape({

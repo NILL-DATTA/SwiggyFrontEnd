@@ -9,11 +9,14 @@ import { foodSchema } from "@/validators/addDishValidator";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store/store";
 import { addMenu } from "@/redux/slice/restaurantSlice";
+import { getCookie } from "cookies-next";
 
 export default function CreateFoodPage() {
     const [success, setSuccess] = useState(false);
     const dispatch = useDispatch<AppDispatch>();
+    const restaurantId = getCookie("restaurant_id");
 
+    console.log(restaurantId, "restaurantId")
     const {
         register,
         handleSubmit,
@@ -24,7 +27,6 @@ export default function CreateFoodPage() {
     } = useForm({
         resolver: yupResolver(foodSchema),
         defaultValues: {
-            restaurantId: "",
             itemName: "",
             description: "",
             foodType: "Starter",
@@ -40,28 +42,42 @@ export default function CreateFoodPage() {
         },
     });
 
-
     const onSubmit = async (data: any) => {
+        console.log("Click Submitted");
+
         const formData = new FormData();
 
-        formData.append("restaurantId", data.restaurantId);
         formData.append("itemName", data.itemName);
         formData.append("description", data.description);
         formData.append("foodType", data.foodType);
         formData.append("category", data.category);
         formData.append("cuisine", data.cuisine);
-        formData.append("basePrice", data.basePrice);
-        formData.append("discountPrice", data.discountPrice);
-        formData.append("gst", data.gst);
-        formData.append("preparationTime", data.preparationTime);
-        formData.append("isAvailable", data.isAvailable);
-        formData.append("isRecommended", data.isRecommended);
-        formData.append("isVeg", data.isVeg);
+        formData.append("basePrice", data.basePrice.toString());
 
-        formData.append("image", data.image[0]);
+        if (data.discountPrice) {
+            formData.append("discountPrice", data.discountPrice.toString());
+        }
 
-        dispatch(addMenu(formData));
-        reset();
+        formData.append("gst", data.gst.toString());
+        formData.append("preparationTime", data.preparationTime.toString());
+        formData.append("isAvailable", String(data.isAvailable));
+        formData.append("isRecommended", String(data.isRecommended));
+        formData.append("isVeg", String(data.isVeg));
+
+        if (data.image?.[0]) {
+            formData.append("image", data.image[0]);
+        }
+
+        try {
+            await dispatch(addMenu(formData)).unwrap();
+
+            setSuccess(true);
+            reset();
+
+            console.log("Food added successfully");
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     return (
@@ -83,7 +99,10 @@ export default function CreateFoodPage() {
 
             <AddDish
                 register={register}
-                handleSubmit={handleSubmit(onSubmit)}
+                handleSubmit={handleSubmit(onSubmit,
+                    (errors) => {
+                        console.log("Validation Errors:", errors);
+                    })}
                 errors={errors}
                 success={success}
                 watch={watch}
@@ -92,3 +111,11 @@ export default function CreateFoodPage() {
         </div>
     );
 }
+
+
+
+
+
+
+
+

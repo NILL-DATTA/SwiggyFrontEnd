@@ -13,7 +13,10 @@ export const endPoints = {
     restaurantDoc: "/restaurant/documents",
     restaurantMenu: "/restaurants/menu",
     restaurantContract: "/partner-contract",
-    addmenu: "/add-food"
+    addmenu: "/add-food",
+    foodlist: "/food/list",
+    restaurantlist: "/my-restaurant"
+
   },
 };
 
@@ -28,4 +31,6 @@ const endPointsUrl = [
   endPoints.restaurant.restaurantMenu,
   endPoints.restaurant.restaurantContract,
   endPoints.restaurant.addmenu,
+  endPoints.restaurant.foodlist,
+  endPoints.restaurant.restaurantlist,
 ];

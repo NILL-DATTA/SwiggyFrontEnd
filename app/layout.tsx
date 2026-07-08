@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ProviderLayout from "@/components/layout/wrapper/wrapper";
 import Providers from "@/redux/store/provider";
+import RestaurantLayout from "@/components/restaurantSidebar/layout";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,7 +34,10 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <Providers>
-          <ProviderLayout>{children}</ProviderLayout>
+          <RestaurantLayout>
+            <ProviderLayout>{children}</ProviderLayout>
+          </RestaurantLayout>
+
         </Providers>
       </body>
     </html>

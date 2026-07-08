@@ -4,6 +4,7 @@ import Login from "@/app/auth/signin/page";
 import RegisterPage from "@/app/auth/signup/page";
 import { RootState } from "@/redux/store/store";
 import { OtpFormData, RegisterFormData } from "@/typeScript/auth.type";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -36,7 +37,7 @@ export default function Navbar() {
 
         <div className="flex gap-6 items-center">
           <p>Swiggy Corporate</p>
-          <p>Partner with us</p>
+          <Link href='/restaurant'><p>Partner with us</p></Link>
 
           <button className="border px-4 py-2 rounded-lg">Get the App</button>
 

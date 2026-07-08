@@ -182,6 +182,11 @@ const authSlice = createSlice({
             sameSite: "lax",
           });
 
+             setCookie("user_id", payload.data.id, {
+            path: "/",
+            sameSite: "lax",
+          });
+
           setCookie("role", payload.data.role, {
             path: "/",
             sameSite: "lax",
