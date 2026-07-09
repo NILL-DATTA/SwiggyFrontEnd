@@ -60,10 +60,9 @@ function Sidebar() {
 
     const pathname = usePathname();
 
-    if (!pathname.startsWith("/restaurant")) {
+    if (!pathname.startsWith("/restaurantdashboard")) {
         return null;
     }
-
 
     const items = [
         { icon: Icon.Grid, label: "Overview", active: true },
@@ -73,11 +72,8 @@ function Sidebar() {
         { icon: Icon.Star, label: "Ratings" },
         { icon: Icon.Settings, label: "Settings" },
     ];
-
-
     return (
         <aside className="hidden md:flex w-60 shrink-0 flex-col bg-[#1F2421] text-[#FFF9F2]/90 min-h-screen py-6 px-4">
-
             <div className="flex items-center gap-2 px-2 mb-10">
                 <div className="h-8 w-8 rounded-lg bg-[#FF5C39] flex items-center justify-center">
                     <Icon.Store className="h-4.5 w-4.5 text-[#1F2421]" />
@@ -101,8 +97,8 @@ function Sidebar() {
                     <button
                         key={label}
                         className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${active
-                                ? "bg-white/10 text-white"
-                                : "text-[#FFF9F2]/60 hover:bg-white/5 hover:text-white"
+                            ? "bg-white/10 text-white"
+                            : "text-[#FFF9F2]/60 hover:bg-white/5 hover:text-white"
                             }`}
                     >
                         <I style={{ width: 18, height: 18 }} />

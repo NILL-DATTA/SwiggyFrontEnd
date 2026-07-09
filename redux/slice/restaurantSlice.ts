@@ -24,8 +24,6 @@ const initialState: RestaurantState = {
   menuData: [],
   restaurantdashBoard: [],
   hasRestaurant: [],
-
-
 };
 
 export const userApplyRestaurant = createAsyncThunk<
@@ -174,7 +172,7 @@ export const addMenu = createAsyncThunk(
 
 export const foodList = createAsyncThunk(
   "restaurant/foodlist",
-  async (restaurantId, thunkAPI) => {
+  async (thunkAPI) => {
     try {
       const response = await AxiosInstance.get(
         endPoints.restaurant.foodlist,

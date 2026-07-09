@@ -147,9 +147,7 @@ export default function AddDish({
 
         <Card>
           <CardLabel>Pricing</CardLabel>
-
           <div className="flex flex-col gap-4">
-
             <div>
               <input
                 placeholder="Base Price"

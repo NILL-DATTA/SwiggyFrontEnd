@@ -4,6 +4,7 @@ import "./globals.css";
 import ProviderLayout from "@/components/layout/wrapper/wrapper";
 import Providers from "@/redux/store/provider";
 import RestaurantLayout from "@/components/restaurantSidebar/layout";
+import RestaurantHeader from "@/components/restaurantHeader/layout";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,6 +23,8 @@ export const metadata: Metadata = {
     icon: "/images/swiggy2.png",
   },
 };
+
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -34,12 +37,17 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <Providers>
-          <RestaurantLayout>
-            <ProviderLayout>{children}</ProviderLayout>
-          </RestaurantLayout>
+
+
+          <ProviderLayout>{children} </ProviderLayout>
+
 
         </Providers>
       </body>
-    </html>
+    </html >
   );
 }
+
+
+
+
