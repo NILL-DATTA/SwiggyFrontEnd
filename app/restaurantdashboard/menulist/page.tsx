@@ -175,7 +175,7 @@ export default function Home() {
                                 Menu Items ({loading ? "..." : filtered.length})
                             </h2>
                             <Link
-                                href="/restaurant/addfood"
+                                href="/restaurantdashboard/addfood"
                                 className="self-start md:self-auto rounded-full bg-[#FF5C39] text-white px-5 py-2.5 text-sm font-medium hover:bg-[#FF6E4E] transition-colors shadow-sm"
                             >
                                 + Add New Item
