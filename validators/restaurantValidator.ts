@@ -142,3 +142,52 @@ export const contractSchema = yup.object({
     .boolean()
     .oneOf([true], "You must accept all terms to proceed"),
 });
+
+
+
+export const foodSchema = yup.object({
+  itemName: yup.string().required("Item name is required"),
+
+  description: yup.string().required("Description is required"),
+
+  foodType: yup.string().required("Food type is required"),
+
+  isVeg: yup.boolean().required(),
+
+  category: yup.string().required("Category is required"),
+
+  cuisine: yup.string().required("Cuisine is required"),
+
+  basePrice: yup
+    .number()
+    .typeError("Base price is required")
+    .required()
+    .positive(),
+
+  discountPrice: yup
+    .number()
+    .typeError("Discount price is required")
+    .required()
+    .positive(),
+
+  discountPercentage: yup
+    .number()
+    .typeError("Discount percentage is required")
+    .required()
+    .min(0)
+    .max(100),
+
+  gst: yup
+    .number()
+    .typeError("GST is required")
+    .required(),
+
+  preparationTime: yup
+    .number()
+    .typeError("Preparation time is required")
+    .required(),
+
+  isAvailable: yup.boolean(),
+
+  isRecommended: yup.boolean(),
+});

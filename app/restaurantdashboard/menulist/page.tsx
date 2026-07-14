@@ -250,7 +250,6 @@ export default function Home() {
                             </div>
                         )}
 
-                        {/* Main UI Layout Dynamic Resolution */}
                         {loading ? (
                             <TableSkeleton />
                         ) : error ? (
@@ -289,7 +288,9 @@ export default function Home() {
                                                 {/* Image */}
                                                 <td className="px-6 py-4 whitespace-nowrap">
                                                     <img
-                                                        src={food.image ? `http://localhost:4000${food.image}` : "/api/placeholder/48/48"}
+                                                        src={food.image?.includes("/uploads")
+                                                            ? `http://localhost:4000${food.image.substring(food.image.indexOf("/uploads"))}`
+                                                            : "/api/placeholder/48/48"}
                                                         alt={food.itemName || "Food item"}
                                                         className="h-12 w-12 rounded-lg object-cover border border-gray-200 shadow-sm"
                                                     />
@@ -321,7 +322,7 @@ export default function Home() {
                                                             }`}
                                                     >
                                                         <span className={`h-2 w-2 rounded-full ${food.isVeg ? "bg-green-600" : "bg-red-600"}`} />
-                                                        {food.isVeg ? "Veg" : "Non Veg"}
+                                                        {food.foodType}
                                                     </span>
                                                 </td>
 
@@ -344,7 +345,7 @@ export default function Home() {
                                                 <td className="px-6 py-4 text-right whitespace-nowrap">
                                                     <div className="flex justify-end gap-2">
                                                         <Link
-                                                            href={`/dashboard/menu/${food._id}/edit`}
+                                                            href={`/restaurantdashboard/edit/${food._id}`}
                                                             className="rounded-lg border border-gray-200 p-2 text-gray-600 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 transition"
                                                         >
                                                             <Icon.Pencil className="w-4 h-4" />

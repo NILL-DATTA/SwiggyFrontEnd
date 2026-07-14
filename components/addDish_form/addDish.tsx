@@ -97,11 +97,10 @@ export default function AddDish({
               >
                 <option value="Biryani">Biryani</option>
                 <option value="Pizza">Pizza</option>
-                <option value="Burger">Burger</option>
+                <option value="Burger">Fast Food</option>
                 <option value="Chinese">Chinese</option>
-                <option value="Rolls">Rolls</option>
                 <option value="Drinks">Drinks</option>
-                <option value="panner">panner</option>
+                <option value="panner">Veg</option>
               </select>
             </div>
 

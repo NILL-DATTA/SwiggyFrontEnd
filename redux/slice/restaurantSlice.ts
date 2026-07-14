@@ -24,6 +24,9 @@ const initialState: RestaurantState = {
   menuData: [],
   restaurantdashBoard: [],
   hasRestaurant: [],
+  editingFoodItem: null,
+  editSuccess: false,
+  singleFood: {}
 };
 
 export const userApplyRestaurant = createAsyncThunk<
@@ -158,18 +161,27 @@ export const addMenu = createAsyncThunk(
   "restaurant/addMenu",
   async (menuData, thunkAPI) => {
     try {
+      console.log("Thunk Started");
+
       const response = await AxiosInstance.post(
         endPoints.restaurant.addmenu,
         menuData
       );
 
+      console.log("Response Received");
+      console.log(response.data);
+
       return response.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
+    } catch (error: any) {
+      console.log("Thunk Error");
+      console.log(error);
+
+      return thunkAPI.rejectWithValue(
+        error.response?.data || error.message
+      );
     }
   }
 );
-
 export const foodList = createAsyncThunk(
   "restaurant/foodlist",
   async (thunkAPI) => {
@@ -201,6 +213,52 @@ export const restaurantDashboard = createAsyncThunk(
     }
   }
 );
+
+export const editFoodItem = createAsyncThunk(
+  "restaurant/editFoodItem",
+  async (
+    {
+      foodId,
+      formData,
+    }: {
+      foodId: string;
+      formData: FormData;
+    },
+    thunkAPI
+  ) => {
+    try {
+      const response = await AxiosInstance.post(
+        `${endPoints.restaurant.restaurantedit}/${foodId}`,
+        formData
+      );
+
+      return response.data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data || error.message
+      );
+    }
+  }
+);
+
+
+export const foodDetails = createAsyncThunk(
+  "restaurant/foodDetails",
+  async (foodId: string, thunkAPI) => {
+    try {
+      const response = await AxiosInstance.get(
+        `${endPoints.restaurant.restaurantfoodDetails}/${foodId}`
+      );
+
+      return response.data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data || error.message
+      );
+    }
+  }
+);
+
 const restaurantSlice = createSlice({
   name: "restaurant",
   initialState,
@@ -407,6 +465,44 @@ const restaurantSlice = createSlice({
         state.hasRestaurant = null;
         state.restaurantdashBoard = null;
       })
+
+
+      .addCase(editFoodItem.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.editSuccess = false;
+      })
+      .addCase(editFoodItem.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        if (payload.status === true) {
+          state.editingFoodItem = payload.data;
+          state.editSuccess = true;
+          toast.success(payload.message || "Food item updated successfully");
+        }
+      })
+      .addCase(editFoodItem.rejected, (state, action) => {
+        state.loading = false;
+        const message = action.payload?.message || "Failed to update food item";
+        state.error = message;
+        state.editSuccess = false;
+        toast.error(message);
+      })
+
+      .addCase(foodDetails.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+
+      .addCase(foodDetails.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.error = null;
+        state.singleFood = payload.data;
+      })
+
+      .addCase(foodDetails.rejected, (state, action: any) => {
+        state.loading = false;
+        state.error = action.payload?.message || action.error.message;
+      });
   },
 });
 

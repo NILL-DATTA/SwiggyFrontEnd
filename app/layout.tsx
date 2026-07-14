@@ -24,7 +24,6 @@ export const metadata: Metadata = {
   },
 };
 
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -37,11 +36,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <Providers>
-
-
           <ProviderLayout>{children} </ProviderLayout>
-
-
         </Providers>
       </body>
     </html >

@@ -19,9 +19,8 @@ const FONTS = `
 export default function CreateFoodPage() {
     const [success, setSuccess] = useState(false);
     const dispatch = useDispatch<AppDispatch>();
-    const restaurantId = getCookie("restaurant_id");
 
-    console.log(restaurantId, "restaurantId");
+
 
     const {
         register,
@@ -72,13 +71,13 @@ export default function CreateFoodPage() {
         if (data.image?.[0]) {
             formData.append("image", data.image[0]);
         }
-
+        console.log("Click ");
         try {
             await dispatch(addMenu(formData)).unwrap();
             setSuccess(true);
             reset();
             console.log("Food added successfully");
-
+            console.log("Click jdjd");
             setTimeout(() => setSuccess(false), 4000);
         } catch (error) {
             console.error(error);
@@ -142,9 +141,7 @@ export default function CreateFoodPage() {
                 <div className="bg-white rounded-2xl border border-[#1F2421]/8 p-6 sm:p-8 shadow-sm">
                     <AddDish
                         register={register}
-                        handleSubmit={handleSubmit(onSubmit, (errors) => {
-                            console.log("Validation Errors:", errors);
-                        })}
+                        handleSubmit={handleSubmit(onSubmit)}
                         errors={errors}
                         success={success}
                         watch={watch}
