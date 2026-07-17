@@ -26,7 +26,8 @@ const initialState: RestaurantState = {
   hasRestaurant: [],
   editingFoodItem: null,
   editSuccess: false,
-  singleFood: {}
+  singleFood: {},
+  pagination: null
 };
 
 export const userApplyRestaurant = createAsyncThunk<
@@ -184,12 +185,15 @@ export const addMenu = createAsyncThunk(
 );
 export const foodList = createAsyncThunk(
   "restaurant/foodlist",
-  async (thunkAPI) => {
+  async ({ page = 1, limit = 10 }, thunkAPI) => {
     try {
       const response = await AxiosInstance.get(
-        endPoints.restaurant.foodlist,
+        endPoints.restaurant.foodlist, {
+        params: {
+          page, limit
+        }
+      }
       );
-
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -441,9 +445,10 @@ const restaurantSlice = createSlice({
       .addCase(foodList.pending, (state) => {
         state.loading = true;
       })
-      .addCase(foodList.fulfilled, (state, action) => {
+      .addCase(foodList.fulfilled, (state, { payload }) => {
         state.loading = false;
-        state.menuData = action.payload;
+        state.menuData = payload;
+        state.pagination = payload.pagination;
       })
       .addCase(foodList.rejected, (state, action) => {
         state.loading = false;

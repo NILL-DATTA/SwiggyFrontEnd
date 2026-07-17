@@ -162,8 +162,8 @@ export default function SwiggyPartnerUI() {
                   !isOtpComplete || isSubmitting || loading
                 }
                 className={`mt-8 w-full rounded-xl py-4 text-lg font-semibold text-white transition-all ${isOtpComplete
-                    ? "bg-orange-500 hover:bg-orange-600"
-                    : "cursor-not-allowed bg-gray-300"
+                  ? "bg-orange-500 hover:bg-orange-600"
+                  : "cursor-not-allowed bg-gray-300"
                   }`}
               >
                 {isSubmitting || loading

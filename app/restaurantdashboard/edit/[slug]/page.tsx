@@ -74,7 +74,6 @@ function SectionCard({ title, subtitle, children }: SectionCardProps) {
     );
 }
 
-
 interface CustomizationGroupItemProps {
     groupIndex: number;
     control: Control<EditFoodForm>;
@@ -251,9 +250,7 @@ export default function EditFoodItemPage() {
                 preparationTime: singleFood.preparationTime ?? 20,
                 isAvailable: singleFood.isAvailable ?? true,
                 isRecommended: singleFood.isRecommended ?? true,
-
                 image: singleFood.image,
-
                 customizations: singleFood.customizations || [],
             });
         }

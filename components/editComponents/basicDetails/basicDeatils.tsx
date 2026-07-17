@@ -8,6 +8,7 @@ const CATEGORIES = [
     "Chinese",
     "Drinks",
     "Veg",
+    "Non-Veg"
 ];
 
 const FOOD_TYPES = [

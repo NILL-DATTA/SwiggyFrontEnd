@@ -7,39 +7,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { foodList } from "@/redux/slice/restaurantSlice";
 
 import type { RootState, AppDispatch } from "@/redux/store";
+import Pagination from "@/components/pagination/pagination";
+import Menu from "@/components/menulist/menu";
+import { FONTS, Icon } from "@/components/fonts/fonts";
+import useMenulist from "@/customHooks/restaurant/restaurant.hook";
 
 type SortKey = "relevance" | "rating" | "cost";
 
-const FONTS = `
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
-`;
 
-const Icon = {
-    Star: (p: SVGProps<SVGSVGElement>) => (
-        <svg viewBox="0 0 24 24" fill="currentColor" {...p}>
-            <path d="M12 2.5l2.9 6.1 6.6.6-5 4.5 1.5 6.5L12 16.9 6 20.2l1.5-6.5-5-4.5 6.6-.6L12 2.5Z" />
-        </svg>
-    ),
-    Pencil: (p: SVGProps<SVGSVGElement>) => (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" {...p}>
-            <path d="M12 20h9" />
-            <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
-        </svg>
-    ),
-    Trash: (p: SVGProps<SVGSVGElement>) => (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" {...p}>
-            <path d="M4 7h16" />
-            <path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
-            <path d="M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13" />
-        </svg>
-    ),
-    Search: (p: SVGProps<SVGSVGElement>) => (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...p}>
-            <circle cx="11" cy="11" r="8" />
-            <path d="m21 21-4.3-4.3" />
-        </svg>
-    ),
-};
 
 interface EmptyPanelProps {
     emoji: string;
@@ -87,22 +62,22 @@ function TableSkeleton() {
     );
 }
 
-export default function Home() {
+export default function Menulist() {
     const [query, setQuery] = useState("");
     const [activeCategory, setActiveCategory] = useState("All");
     const [pureVegOnly, setPureVegOnly] = useState(false);
     const [minRating, setMinRating] = useState(false);
     const [sortKey, setSortKey] = useState<SortKey>("relevance");
     const [confirmId, setConfirmId] = useState<string | null>(null);
-
+    const [page, setPage] = useState(1);
+    const limit = 10;
     const dispatch = useDispatch<AppDispatch>();
 
-    const { hasRestaurant, menuData, loading, error } =
+    const { hasRestaurant, menuData, loading, error, pagination } =
         useSelector((state: RootState) => state.restaurant);
 
-    useEffect(() => {
-        dispatch(foodList());
-    }, [dispatch]);
+    useMenulist(page, limit)
+
 
     const items = menuData?.data ?? [];
 
@@ -156,6 +131,19 @@ export default function Home() {
         setPureVegOnly(false);
         setMinRating(false);
         setSortKey("relevance");
+    };
+
+
+    const handleNext = () => {
+        if (page < pagination.totalPages) {
+            setPage((prev) => prev + 1);
+        }
+    }
+
+    const handlePrev = () => {
+        if (page > 1) {
+            setPage((prev) => prev - 1);
+        }
     };
 
     return (
@@ -257,7 +245,7 @@ export default function Home() {
                                 emoji="⚠️"
                                 title="Couldn't load the menu"
                                 message={typeof error === "string" ? error : "Something went wrong. Please try again."}
-                                action={{ label: "Retry Dashboard Load", onClick: () => dispatch(foodList()) }}
+                                action={{ label: "Retry Dashboard Load", onClick: () => dispatch(foodList({ page, limit })) }}
                             />
                         ) : !hasRestaurant ? (
                             <EmptyPanel
@@ -280,87 +268,7 @@ export default function Home() {
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-[#1F2421]/8">
-                                        {filtered.map((food: any) => (
-                                            <tr
-                                                key={food._id}
-                                                className="hover:bg-[#FAFAFA] transition-colors"
-                                            >
-                                                {/* Image */}
-                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                    <img
-                                                        src={food.image?.includes("/uploads")
-                                                            ? `http://localhost:4000${food.image.substring(food.image.indexOf("/uploads"))}`
-                                                            : "/api/placeholder/48/48"}
-                                                        alt={food.itemName || "Food item"}
-                                                        className="h-12 w-12 rounded-lg object-cover border border-gray-200 shadow-sm"
-                                                    />
-                                                </td>
-
-                                                {/* Name */}
-                                                <td className="px-6 py-4">
-                                                    <div className="max-w-[200px]">
-                                                        <p className="font-semibold text-[#1F2421] truncate">{food.itemName}</p>
-                                                        <p className="text-xs text-gray-500 truncate mt-0.5">
-                                                            {food.description || "No description provided."}
-                                                        </p>
-                                                    </div>
-                                                </td>
-
-                                                {/* Category */}
-                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                    <span className="rounded-full bg-orange-50 px-3 py-1 text-xs font-medium text-orange-600">
-                                                        {food.category}
-                                                    </span>
-                                                </td>
-
-                                                {/* Veg / Non-Veg */}
-                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                    <span
-                                                        className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${food.isVeg
-                                                            ? "bg-green-50 text-green-700"
-                                                            : "bg-red-50 text-red-700"
-                                                            }`}
-                                                    >
-                                                        <span className={`h-2 w-2 rounded-full ${food.isVeg ? "bg-green-600" : "bg-red-600"}`} />
-                                                        {food.foodType}
-                                                    </span>
-                                                </td>
-
-                                                {/* Rating */}
-                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                    <div className="flex items-center gap-1.5 text-gray-700">
-                                                        <Icon.Star className="text-yellow-400 w-4 h-4" />
-                                                        <span className="font-medium">{food.rating || "-"}</span>
-                                                    </div>
-                                                </td>
-
-                                                {/* Price */}
-                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                    <span className="font-bold text-[#FF5C39]">
-                                                        ₹{food.basePrice}
-                                                    </span>
-                                                </td>
-
-                                                {/* Actions */}
-                                                <td className="px-6 py-4 text-right whitespace-nowrap">
-                                                    <div className="flex justify-end gap-2">
-                                                        <Link
-                                                            href={`/restaurantdashboard/edit/${food._id}`}
-                                                            className="rounded-lg border border-gray-200 p-2 text-gray-600 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 transition"
-                                                        >
-                                                            <Icon.Pencil className="w-4 h-4" />
-                                                        </Link>
-
-                                                        <button
-                                                            onClick={() => setConfirmId(food._id)}
-                                                            className="rounded-lg border border-gray-200 p-2 text-gray-600 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition"
-                                                        >
-                                                            <Icon.Trash className="w-4 h-4" />
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))}
+                                        <Menu filtered={filtered} setConfirmId={setConfirmId} />
                                     </tbody>
                                 </table>
                             </div>
@@ -378,6 +286,7 @@ export default function Home() {
                     </section>
                 </main>
             </div>
+            <Pagination handlePrev={handlePrev} pagination={pagination} setPage={setPage} handleNext={handleNext} />
         </div>
     );
 }

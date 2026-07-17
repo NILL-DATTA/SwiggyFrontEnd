@@ -9,7 +9,6 @@ import { foodSchema } from "@/validators/addDishValidator";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 import { addMenu } from "@/redux/slice/restaurantSlice";
-import { getCookie } from "cookies-next";
 import Link from "next/link";
 
 const FONTS = `
@@ -19,8 +18,6 @@ const FONTS = `
 export default function CreateFoodPage() {
     const [success, setSuccess] = useState(false);
     const dispatch = useDispatch<AppDispatch>();
-
-
 
     const {
         register,
