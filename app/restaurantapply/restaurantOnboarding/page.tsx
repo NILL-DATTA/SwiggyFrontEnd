@@ -4,7 +4,6 @@ import { useState } from "react";
 import SideBar from "@/components/restaurantonBoard/sideBar";
 import RestaurantPage from "@/components/restaurantonBoard/Step1RestaurantInfo/restaurantDetails/restaurantdetails";
 import Step2RestaurantDocuments from "@/components/restaurantonBoard/Step2RestaurantDoc/restaurantDoc/Step2RestaurantDocuments";
-import MenuSetupForm from "@/components/restaurantonBoard/Step3RestaurantMenu/menu/menu";
 import PartnerContract from "@/components/restaurantonBoard/step3RestaurantPartner/partner/partner";
 
 export default function Restaurant() {
@@ -35,7 +34,6 @@ export default function Restaurant() {
           {step === 2 && (
             <Step2RestaurantDocuments nextStep={nextStep} prevStep={prevStep} />
           )}
-
 
           {step === 3 && (
             <PartnerContract nextStep={nextStep} prevStep={prevStep} setCompletedSteps={setCompletedSteps} />

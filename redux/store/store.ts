@@ -1,7 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import {} from "process";
+import { } from "process";
 import authSlice from "../slice/authSlice";
 import restaurantSlice from "../slice/restaurantSlice";
+import userSlice from "../slice/userSlice"
 import {
   persistStore,
   persistReducer,
@@ -24,11 +25,12 @@ const persistedRestaurantReducer = persistReducer(
   persistConfig,
   restaurantSlice,
 );
-
+const persistUserReducer = persistReducer(persistConfig, userSlice)
 export const store = configureStore({
   reducer: {
     auth: persistedReducer,
     restaurant: persistedRestaurantReducer,
+    user: persistUserReducer
   },
 
   middleware: (getDefaultMiddleware) =>

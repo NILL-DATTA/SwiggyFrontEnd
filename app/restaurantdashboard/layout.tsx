@@ -1,6 +1,5 @@
 import RestaurantLayout from "../../components/restaurantLayout/restaurantLayout";
 
-
 export default function Layout({
   children,
 }: {

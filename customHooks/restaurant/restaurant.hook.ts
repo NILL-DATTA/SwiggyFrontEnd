@@ -1,16 +1,18 @@
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-
 import { foodList } from "@/redux/slice/restaurantSlice";
 import { AppDispatch } from "@/redux/store/store";
+import { useCallback, useEffect } from "react";
+import { useDispatch } from "react-redux";
 
-const useMenulist = (page: number, limit: number) => {
+export const useMenulist = (page: number, limit: number) => {
   const dispatch = useDispatch<AppDispatch>();
 
-  useEffect(() => {
-    console.log("Hook", page, limit);
+  const fetchMenu = useCallback(() => {
     dispatch(foodList({ page, limit }));
   }, [dispatch, page, limit]);
-};
 
-export default useMenulist;
+  useEffect(() => {
+    fetchMenu();
+  }, [fetchMenu]);
+
+  return { fetchMenu };
+};

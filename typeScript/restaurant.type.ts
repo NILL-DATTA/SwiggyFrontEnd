@@ -93,3 +93,33 @@ export interface MenuItemPayload {
   };
 }
 export type MenuFormData = yup.InferType<typeof menuSchema>;
+
+export interface Category {
+    _id: string;
+    name: string;
+    image: string;
+}
+
+export interface Restaurant {
+    _id: string;
+    name: string;
+    image: string;
+    rating: number;
+    /** e.g. "20-25 mins" */
+    deliveryTime: string;
+    cuisines: string[];
+    area: string;
+    /** e.g. "50% OFF", "ITEMS AT ₹70" — omit if there's no active offer */
+    offerLabel?: string;
+    isPromoted?: boolean;
+}
+
+export type SortOption = "relevance" | "rating" | "delivery-time" | "cost-low" | "cost-high";
+
+export const SORT_LABELS: Record<SortOption, string> = {
+    relevance: "Relevance",
+    rating: "Rating",
+    "delivery-time": "Delivery Time",
+    "cost-low": "Cost: Low to High",
+    "cost-high": "Cost: High to Low",
+};

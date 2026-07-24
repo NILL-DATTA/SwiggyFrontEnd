@@ -17,8 +17,14 @@ export const endPoints = {
     foodlist: "/food/list",
     restaurantlist: "/my-restaurant",
     restaurantedit: "/food/edit",
-    restaurantfoodDetails: "/food/details"
+    restaurantfoodDetails: "/food/details",
+    restaurantfoodDelete: "/food",
+    restaurantfoodAvailable: "/toggle-availability"
   },
+
+  user: {
+    list: "/user/food_list"
+  }
 };
 
 const endPointsUrl = [
@@ -35,5 +41,8 @@ const endPointsUrl = [
   endPoints.restaurant.foodlist,
   endPoints.restaurant.restaurantlist,
   endPoints.restaurant.restaurantedit,
-  endPoints.restaurant.restaurantfoodDetails
+  endPoints.restaurant.restaurantfoodDetails,
+  endPoints.restaurant.restaurantfoodDelete,
+  endPoints.restaurant.restaurantfoodAvailable,
+  endPoints.user.list,
 ];

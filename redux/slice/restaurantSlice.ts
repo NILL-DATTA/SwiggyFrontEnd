@@ -263,6 +263,39 @@ export const foodDetails = createAsyncThunk(
   }
 );
 
+
+export const foodDeletebyRestaurant = createAsyncThunk(
+  "restaurant/fooddelete",
+  async (foodId: string, thunkAPI) => {
+    try {
+      const response = await AxiosInstance.delete(
+        `${endPoints.restaurant.restaurantfoodDelete}/${foodId}`,
+      );
+      return response.data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data || error.message
+      );
+    }
+  }
+);
+
+export const foodAvailable = createAsyncThunk(
+  "restaurant/foodAvailable",
+  async (foodId: string, thunkAPI) => {
+    try {
+      const response = await AxiosInstance.patch(
+        `${foodId}${endPoints.restaurant.restaurantfoodAvailable}`,
+      );
+      return response.data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data || error.message
+      );
+    }
+  }
+);
+
 const restaurantSlice = createSlice({
   name: "restaurant",
   initialState,
@@ -317,9 +350,6 @@ const restaurantSlice = createSlice({
           toast.success(
             payload?.message || "OTP verified successfully"
           );
-
-
-
         }
       })
 
@@ -507,7 +537,46 @@ const restaurantSlice = createSlice({
       .addCase(foodDetails.rejected, (state, action: any) => {
         state.loading = false;
         state.error = action.payload?.message || action.error.message;
-      });
+      })
+
+      // .addCase(foodDeletebyRestaurant.pending, (state, action) => {
+
+      // })
+
+      // .addCase(foodDeletebyRestaurant.fulfilled, (state, action) => {
+      //   state.menuData.data = state.menuData.data.filter(
+      //     item => item._id !== action.meta.arg
+      //   );
+      // })
+
+      // .addCase(foodDeletebyRestaurant.rejected, (state, action) => {
+
+      // });
+
+      .addCase(foodAvailable.pending, (state, action) => {
+
+      })
+      .addCase(foodAvailable.fulfilled, (state, { payload }) => {
+        const updatedFood = payload.data;
+        if (payload.success == true) {
+          const index = state.menuData.data.findIndex(
+            (item) => item._id === updatedFood._id
+          );
+
+          if (index !== -1) {
+            state.menuData.data[index] = updatedFood;
+          }
+
+          toast.success(payload.message)
+        }
+
+
+
+      })
+
+      .addCase(foodAvailable.rejected, (state, action) => {
+
+      })
   },
 });
 

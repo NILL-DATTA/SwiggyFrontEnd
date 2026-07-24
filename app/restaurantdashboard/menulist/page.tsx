@@ -1,20 +1,21 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import type { SVGProps } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
-import { foodList } from "@/redux/slice/restaurantSlice";
 
-import type { RootState, AppDispatch } from "@/redux/store";
+import type { RootState } from "@/redux/store";
 import Pagination from "@/components/pagination/pagination";
 import Menu from "@/components/menulist/menu";
 import { FONTS, Icon } from "@/components/fonts/fonts";
-import useMenulist from "@/customHooks/restaurant/restaurant.hook";
+
+import { filterMenu, getCategories } from "@/utils/menufilters";
+import { handleNext, handlePrev } from "@/handlers/paginationHandlers";
+import { handleDelete } from "@/handlers/menuhandler";
+import { useMenulist } from "@/customHooks/restaurant/restaurant.hook";
+import { foodAvailable, foodList } from "@/redux/slice/restaurantSlice";
 
 type SortKey = "relevance" | "rating" | "cost";
-
-
 
 interface EmptyPanelProps {
     emoji: string;
@@ -68,84 +69,43 @@ export default function Menulist() {
     const [pureVegOnly, setPureVegOnly] = useState(false);
     const [minRating, setMinRating] = useState(false);
     const [sortKey, setSortKey] = useState<SortKey>("relevance");
-    const [confirmId, setConfirmId] = useState<string | null>(null);
     const [page, setPage] = useState(1);
     const limit = 10;
-    const dispatch = useDispatch<AppDispatch>();
-
-    const { hasRestaurant, menuData, loading, error, pagination } =
-        useSelector((state: RootState) => state.restaurant);
-
+    const dispatch = useDispatch()
+    const { hasRestaurant, menuData, loading, error, pagination } = useSelector((state: RootState) => state.restaurant);
     useMenulist(page, limit)
-
-
     const items = menuData?.data ?? [];
 
-    const categories = useMemo(() => {
-        const unique = new Set<string>();
-        items.forEach((item: any) => {
-            if (item?.category) unique.add(item.category.trim());
+    const categories = useMemo(() => getCategories(items), [items]);
+
+    const filtered = useMemo(
+        () =>
+            filterMenu({
+                items,
+                query,
+                activeCategory,
+                pureVegOnly,
+                minRating,
+                sortKey,
+            }),
+        [items, query, activeCategory, pureVegOnly, minRating, sortKey]
+    );
+
+    const handleToggle = async (id: string) => {
+        await dispatch(foodAvailable(id));
+    };
+
+
+    const deleteFood = (id: string) => {
+        handleDelete({
+            id,
+            dispatch,
+            fetchMenu: (page: number, limit: number) =>
+                dispatch(foodList({ page, limit })),
+            page,
+            limit,
         });
-        return ["All", ...Array.from(unique)];
-    }, [items]);
-
-    const filtered = useMemo(() => {
-        let list = [...items];
-
-        if (query.trim()) {
-            list = list.filter((food: any) =>
-                food.itemName?.toLowerCase().includes(query.toLowerCase())
-            );
-        }
-
-        if (activeCategory !== "All") {
-            list = list.filter(
-                (food: any) =>
-                    food.category?.trim().toLowerCase() === activeCategory.trim().toLowerCase()
-            );
-        }
-
-        if (pureVegOnly) {
-            list = list.filter((food: any) => food.isVeg);
-        }
-
-        if (minRating) {
-            list = list.filter((food: any) => (food.rating ?? 0) >= 4.3);
-        }
-
-        switch (sortKey) {
-            case "rating":
-                list.sort((a: any, b: any) => (b.rating ?? 0) - (a.rating ?? 0));
-                break;
-            case "cost":
-                list.sort((a: any, b: any) => (a.basePrice ?? 0) - (b.basePrice ?? 0));
-                break;
-        }
-
-        return list;
-    }, [items, query, activeCategory, pureVegOnly, minRating, sortKey]);
-
-    const clearAllFilters = () => {
-        setQuery("");
-        setActiveCategory("All");
-        setPureVegOnly(false);
-        setMinRating(false);
-        setSortKey("relevance");
     };
-
-
-    const handleNext = () => {
-        if (page < pagination.totalPages) {
-            setPage((prev) => prev + 1);
-        }
-    }
-
-    const handlePrev = () => {
-        if (page > 1) {
-            setPage((prev) => prev - 1);
-        }
-    };
-
     return (
         <div className="min-h-screen bg-[#FFF9F2] text-[#1F2421]" style={{ fontFamily: "'Inter', sans-serif" }}>
             <style>{FONTS}</style>
@@ -245,7 +205,7 @@ export default function Menulist() {
                                 emoji="⚠️"
                                 title="Couldn't load the menu"
                                 message={typeof error === "string" ? error : "Something went wrong. Please try again."}
-                                action={{ label: "Retry Dashboard Load", onClick: () => dispatch(foodList({ page, limit })) }}
+                            // action={{ label: "Retry Dashboard Load", onClick: () => dispatch(foodList({ page, limit })) }}
                             />
                         ) : !hasRestaurant ? (
                             <EmptyPanel
@@ -264,11 +224,15 @@ export default function Menulist() {
                                             <th className="px-6 py-4 font-medium">Type</th>
                                             <th className="px-6 py-4 font-medium">Rating</th>
                                             <th className="px-6 py-4 font-medium">Price</th>
-                                            <th className="px-6 py-4 text-right font-medium">Actions</th>
+                                            <th className="px-6 py-4 text-right font-medium">Availability</th>
+                                            <th className="px-6 py-4 text-center font-medium">
+                                                Actions
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-[#1F2421]/8">
-                                        <Menu filtered={filtered} setConfirmId={setConfirmId} />
+                                        <Menu filtered={filtered} handleDelete={deleteFood} toggleAvailability={handleToggle} />
+
                                     </tbody>
                                 </table>
                             </div>
@@ -277,10 +241,10 @@ export default function Menulist() {
                                 emoji="🍽️"
                                 title="No Food Found"
                                 message="We couldn't find any items matching your active search keywords or selected filter properties."
-                                action={{
-                                    label: "Clear All Filters",
-                                    onClick: clearAllFilters,
-                                }}
+                            // action={{
+                            //     label: "Clear All Filters",
+                            //     // onClick: clearAllFilters,
+                            // }}
                             />
                         )}
                     </section>
