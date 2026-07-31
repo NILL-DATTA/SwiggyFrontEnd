@@ -131,11 +131,10 @@ export default function RestaurantCard({ restaurant, onSelectRestaurant }: Props
                 {/* Veg / Non Veg */}
                 <div className="mt-3 flex items-center justify-between">
                     <span
-                        className={`rounded-full px-3 py-1 text-xs font-medium ${
-                            restaurant.isVeg
+                        className={`rounded-full px-3 py-1 text-xs font-medium ${restaurant.isVeg
                                 ? "bg-green-100 text-green-700"
                                 : "bg-red-100 text-red-700"
-                        }`}
+                            }`}
                     >
                         {restaurant.isVeg ? "Veg" : "Non Veg"}
                     </span>

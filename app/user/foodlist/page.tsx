@@ -12,6 +12,7 @@ import { AppDispatch, RootState } from "@/redux/store";
 import { userRestaurantList } from "@/redux/slice/userSlice";
 import { Restaurant } from "@/components/data/restaurant";
 import { Category } from "@/components/data/category";
+import { socket } from "@/lib/socket/socket";
 
 interface RestaurantHomeProps {
     brandName: string;
@@ -48,8 +49,43 @@ export default function RestaurantHome({
         dispatch(userRestaurantList());
     }, [dispatch]);
 
+    useEffect(() => {
+        socket.connect();
 
-    console.log(userlistData, "userlistData")
+        const handleConnect = () => {
+            console.log("Connected:", socket.id);
+        };
+
+        const handleRestaurantStatus = (data: any) => {
+            console.log("Restaurant:", data);
+
+            alert(
+                `${data.restaurantName} is ${data.isOpen ? "OPEN" : "CLOSED"
+                }`
+            );
+        };
+
+        const handleFoodStatus = (data: any) => {
+            console.log("Food:", data);
+
+            alert(
+                `${data.itemName} is ${data.isAvailable ? "Available" : "Out Of Stock"
+                }`
+            );
+        };
+
+        socket.on("connect", handleConnect);
+        socket.on("restaurant:status", handleRestaurantStatus);
+        socket.on("food:status", handleFoodStatus);
+
+        return () => {
+            socket.off("connect", handleConnect);
+            socket.off("restaurant:status", handleRestaurantStatus);
+            socket.off("food:status", handleFoodStatus);
+
+            socket.disconnect();
+        };
+    }, []);
     return (
         <div className="min-h-screen bg-white">
             <TopNav

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -14,6 +14,7 @@ import { handleNext, handlePrev } from "@/handlers/paginationHandlers";
 import { handleDelete } from "@/handlers/menuhandler";
 import { useMenulist } from "@/customHooks/restaurant/restaurant.hook";
 import { foodAvailable, foodList } from "@/redux/slice/restaurantSlice";
+import { socket } from "@/lib/socket/socket";
 
 type SortKey = "relevance" | "rating" | "cost";
 
@@ -106,6 +107,11 @@ export default function Menulist() {
             limit,
         });
     };
+
+
+
+
+
     return (
         <div className="min-h-screen bg-[#FFF9F2] text-[#1F2421]" style={{ fontFamily: "'Inter', sans-serif" }}>
             <style>{FONTS}</style>

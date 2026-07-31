@@ -23,10 +23,9 @@ export default function SwiggyHome() {
     });
   };
 
-  // ১. ইমেজ পাথগুলো আপনার public/images ফোল্ডারের নামের সাথে মিলিয়ে নিন (Case-sensitive)
   const foods = [
     "/images/Biryani.avif",
-    "/images/pizza.avif", // চেক করুন p ছোটহাতের নাকি বড়হাতের Pizza.avif
+    "/images/pizza.avif", 
     "/images/Dosa.avif",
     "/images/Pasta.avif",
     "/images/Vada.avif",
@@ -53,13 +52,13 @@ export default function SwiggyHome() {
 
   return (
     <div className="w-full min-h-screen bg-gray-50 text-slate-900 antialiased">
-      
+
       <div className="w-full">
         <Hero />
       </div>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
-        
+
         <section className="w-full">
           <Categories foods={foods} />
         </section>
