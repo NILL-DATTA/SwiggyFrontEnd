@@ -25,7 +25,7 @@ export default function SwiggyHome() {
 
   const foods = [
     "/images/Biryani.avif",
-    "/images/pizza.avif", 
+    "/images/pizza.avif",
     "/images/Dosa.avif",
     "/images/Pasta.avif",
     "/images/Vada.avif",
