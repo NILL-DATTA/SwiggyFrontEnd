@@ -18,7 +18,6 @@ const FONTS = `
 export default function CreateFoodPage() {
     const [success, setSuccess] = useState(false);
     const dispatch = useDispatch<AppDispatch>();
-
     const {
         register,
         handleSubmit,
